@@ -39,6 +39,7 @@ dependencies:
   audioplayers:
   path_provider:
   path:
+  share_plus:
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,8 +71,30 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/voices.txt
     - assets/reference_audio_girl.wav
-  
+    - assets/taylor_2s.wav
+    - assets/taylor_4s.wav
+    - assets/taylor_15s.wav
+    - assets/trump_9s.wav
+    - assets/trump_3s.wav
+    - assets/ken.wav
+    - assets/ano.wav
+    - assets/boy11.wav
+    - assets/ega.wav
+    - assets/hotta.wav
+    - assets/kaz.wav
+    - assets/man17.wav
+    - assets/man18.wav
+    - assets/sana.wav
+    - assets/woman1.wav
+    - assets/woman2.wav
+    - assets/woman3.wav
+    - assets/woman10.wav
+    - assets/woman15.wav
+    - assets/woman17.wav
+    - assets/woman23.wav
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

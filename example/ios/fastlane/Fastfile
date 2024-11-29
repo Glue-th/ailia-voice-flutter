@@ -95,7 +95,7 @@ platform :ios do
 
   private_lane :notify_slack do |options|
     slack(
-      slack_url: "https://hooks.slack.com/services/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",
+      slack_url: ENV["SLACK_WEBHOOK_URL"],
       message: options[:message],
       channel: "#mm-app-build",
       payload: {

@@ -14,3 +14,41 @@ ailia AI Voice can perform speech synthesis offline, only on edge devices, witho
 
 https://github.com/axinc-ai/ailia-sdk
 
+## Build App
+
+```bash
+cd example/ios
+```
+
+### Install Gem
+
+```bash
+bundle install
+```
+
+### Install Fastlane
+
+```bash
+brew install fastlane
+```
+
+### Create `.env.secret` in `example/ios/fastlane`
+
+1. Provide the application specific password using the environment variable `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD`
+
+   1.1. Visit https://appleid.apple.com/account/manage
+
+   1.2. Generate a new application specific password
+
+2. Provide the Apple email address using the environment variable `APPLE_ID`
+
+```bash
+APPLE_ID="Your Apple email address"
+FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="Your application specific password"
+```
+
+### Run
+
+```bash
+fastlane build_app
+```

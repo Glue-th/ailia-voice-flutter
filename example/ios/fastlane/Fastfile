@@ -1,0 +1,117 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+module GoogleServiceInfoPlistPath
+  DEV = "./ios/Runner/dev/GoogleService-Info.plist"
+end
+
+default_platform(:ios)
+
+fastlane_require 'spaceship'
+
+platform :ios do
+  desc "MUMON-iOS"
+
+  shouldClean = false
+
+  before_all do |lane, options|
+    Dotenv.load ".env.secret"
+    automate_build_number(lane)
+  end
+
+  after_all do |lane|
+    sh "git checkout ../Runner.xcodeproj/project.pbxproj"
+    sh "git checkout ../*/Info.plist"
+  end
+
+  error do |lane, exception|
+   after_all()
+  end
+
+  def automate_build_number(lane)
+    build_number = latest_testflight_build_number(
+      app_identifier: ENV["APP_IDENTIFIER"],
+      team_id: ENV["FASTLANE_ITC_TEAM_ID"],
+      team_name: ENV["FASTLANE_ITC_TEAM_NAME"],
+      username: ENV["APPLE_ID"],
+    ) + 1
+    increment_build_number(
+      build_number: build_number
+    )
+  end
+
+  lane:build_app do |options|
+    mm_build(
+      include_bitcode: false,
+      include_symbols: true,
+      export_options_method: "app-store"
+    )
+    mm_testflight()
+    notify_slack(
+      message: "🚀🚀🚀 New MUMON Demo (#{get_build_number()}) is available on Testflight.\n\nPlease waiting for processing (5-10 minutes) and then check it out in Testflight app!"
+    )
+  end
+
+  private_lane :mm_build do |options|
+    cocoapods(
+      clean_install: false,
+      use_bundle_exec: false,
+      podfile: "../ios/Podfile"
+    )
+    gym(
+      scheme: ENV["SCHEME"],
+      include_bitcode: options[:include_bitcode],
+      include_symbols: options[:include_symbols],
+      clean: shouldClean,
+      export_xcargs: "-allowProvisioningUpdates",
+      export_options: {
+        method: options[:export_options_method],
+      }
+    )
+  end
+
+  private_lane :mm_testflight do |options|
+    testflight(
+      skip_submission: false,
+      skip_waiting_for_build_processing: true,
+      app_identifier: ENV["APP_IDENTIFIER"],
+      team_id: ENV["FASTLANE_ITC_TEAM_ID"],
+      team_name: ENV["FASTLANE_ITC_TEAM_NAME"],
+      username: ENV["APPLE_ID"],
+    )
+  end
+
+  private_lane :notify_slack do |options|
+    slack(
+      slack_url: "https://hooks.slack.com/services/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",
+      message: options[:message],
+      channel: "#mm-app-build",
+      payload: {
+        "Build Date" => Time.new.to_s,
+      },
+      default_payloads: ["git_author", "last_git_commit"],
+    )
+  end
+
+  private_lane :change_log_from_git do |options|
+    count = options[:count] ? options[:count] : 10
+    changelog_from_git_commits(
+      commits_count: count,
+      pretty: "- (%ae) %s",
+      date_format: "short",
+      merge_commit_filtering: "exclude_merges"
+    )
+  end
+end

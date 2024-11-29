@@ -52,7 +52,7 @@ platform :ios do
     )
   end
 
-  lane:build_app do |options|
+  lane:build do |options|
     mm_build(
       include_bitcode: false,
       include_symbols: true,

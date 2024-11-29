@@ -50,5 +50,5 @@ FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD="Your application specific password
 ### Run
 
 ```bash
-fastlane build_app
+fastlane build
 ```

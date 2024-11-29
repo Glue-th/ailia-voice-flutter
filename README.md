@@ -16,20 +16,16 @@ https://github.com/axinc-ai/ailia-sdk
 
 ## Build App
 
+### Install Fastlane
+
 ```bash
-cd example/ios
+brew install fastlane
 ```
 
 ### Install Gem
 
 ```bash
-bundle install
-```
-
-### Install Fastlane
-
-```bash
-brew install fastlane
+cd example/ios && bundle install
 ```
 
 ### Create `.env.secret` in `example/ios/fastlane`
